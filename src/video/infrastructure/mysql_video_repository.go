@@ -1,3 +1,4 @@
+// mysql_video_repository.go
 package infrastructure
 
 import (
@@ -70,15 +71,15 @@ func (r *MySQLVideoRepository) GetByID(id int) (*entities.Video, error) {
 	return &video, nil
 }
 
-func (r *MySQLVideoRepository) GetByUserID(userID int) ([]entities.Video, error) {
+func (r *MySQLVideoRepository) GetAll() ([]entities.Video, error) {
 	query := `
-		SELECT id, title, description, url, user_id 
-		FROM videos 
-		WHERE user_id = ?
-	`
-	rows, err := r.conn.Query(query, userID)
+        SELECT id, title, description, url, user_id 
+        FROM videos
+        ORDER BY id DESC
+    `
+	rows, err := r.conn.Query(query)
 	if err != nil {
-		log.Println("Error al obtener videos por usuario:", err)
+		log.Println("Error al obtener todos los videos:", err)
 		return nil, fmt.Errorf("error al listar videos")
 	}
 	defer rows.Close()
@@ -98,20 +99,11 @@ func (r *MySQLVideoRepository) GetByUserID(userID int) ([]entities.Video, error)
 		}
 		videos = append(videos, video)
 	}
+
+	if err := rows.Err(); err != nil {
+		log.Println("Error después de leer videos:", err)
+		return nil, fmt.Errorf("error al procesar los videos")
+	}
+
 	return videos, nil
-}
-
-func (r *MySQLVideoRepository) Delete(id int) error {
-	query := `DELETE FROM videos WHERE id = ?`
-	result, err := r.conn.Exec(query, id)
-	if err != nil {
-		log.Println("Error al eliminar video:", err)
-		return fmt.Errorf("error al eliminar el video")
-	}
-
-	rowsAffected, _ := result.RowsAffected()
-	if rowsAffected == 0 {
-		return fmt.Errorf("video con ID %d no encontrado", id)
-	}
-	return nil
 }

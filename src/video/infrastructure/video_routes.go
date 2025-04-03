@@ -1,3 +1,4 @@
+// video_routes.go
 package infrastructure
 
 import (
@@ -9,19 +10,16 @@ type VideoRouter struct {
 }
 
 func NewVideoRouter(engine *gin.Engine) *VideoRouter {
-	return &VideoRouter{
-		engine: engine,
-	}
+	return &VideoRouter{engine: engine}
 }
 
 func (r *VideoRouter) Run() {
-	// Inicializar dependencias
-	createController, getController := InitVideoDependencies()
+	createController, getController, getAllController := InitVideoDependencies() // Actualizado
 
-	// Configurar rutas
 	videoGroup := r.engine.Group("/videos")
 	{
 		videoGroup.POST("/", createController.Run)
+		videoGroup.GET("/", getAllController.Run) // Nueva ruta
 		videoGroup.GET("/:id", getController.Run)
 	}
 }
