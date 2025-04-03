@@ -1,3 +1,4 @@
+// usuario.go
 package entities
 
 import (

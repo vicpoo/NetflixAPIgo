@@ -1,3 +1,4 @@
+// video.go
 package entities
 
 type Video struct {

@@ -1,3 +1,4 @@
+// auth_controller.go
 package infrastructure
 
 import (
