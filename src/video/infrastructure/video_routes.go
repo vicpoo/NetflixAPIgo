@@ -1,4 +1,3 @@
-// video_routes.go
 package infrastructure
 
 import (
@@ -14,12 +13,17 @@ func NewVideoRouter(engine *gin.Engine) *VideoRouter {
 }
 
 func (r *VideoRouter) Run() {
-	createController, getController, getAllController := InitVideoDependencies() // Actualizado
+	createController, getController, getAllController, cacheController, uploadController := InitVideoDependencies()
 
 	videoGroup := r.engine.Group("/videos")
 	{
 		videoGroup.POST("/", createController.Run)
-		videoGroup.GET("/", getAllController.Run) // Nueva ruta
+		videoGroup.GET("/", getAllController.Run)
 		videoGroup.GET("/:id", getController.Run)
+		videoGroup.POST("/upload", uploadController.UploadHandler)
+
+		// Rutas para el caché - CORREGIDO ClearCacheHandler (sin 's')
+		videoGroup.POST("/:id/cache", cacheController.CacheVideoHandler)
+		videoGroup.GET("/:id/cache", cacheController.GetCachedVideoStreamHandler)
 	}
 }
