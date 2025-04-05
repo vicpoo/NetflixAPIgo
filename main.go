@@ -1,3 +1,4 @@
+// main.go
 package main
 
 import (
@@ -21,7 +22,7 @@ func main() {
 
 	// 3. Configuración de CORS
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:4200"}, // Asegúrate de permitir la IP pública si lo necesitas
+		AllowOrigins:     []string{"http://localhost:4200"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -48,19 +49,18 @@ func main() {
 	videoRouter := videoInfra.NewVideoRouter(router)
 	videoRouter.Run()
 
-	// 8. Iniciar el servidor en todas las interfaces de red
+	// 8. Iniciar el servidor
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8000"
 	}
 
-	log.Printf("\n🚀 Servidor iniciado en http://0.0.0.0:%s", port) // Cambié localhost por 0.0.0.0
+	log.Printf("\n🚀 Servidor iniciado en http://localhost:%s", port)
 	log.Println("📁 Rutas estáticas:")
 	log.Println("   - /uploads para videos subidos")
 	log.Println("   - /video_cache para videos cacheados")
 
-	// Inicia el servidor en 0.0.0.0:8000 (o el puerto configurado)
-	if err := router.Run("0.0.0.0:" + port); err != nil {
+	if err := router.Run(":" + port); err != nil {
 		log.Fatal("Error al iniciar el servidor:", err)
 	}
 }
