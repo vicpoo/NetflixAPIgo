@@ -20,9 +20,9 @@ func main() {
 	// 2. Crear un router con Gin
 	router := gin.Default()
 
-	// 3. Configuración de CORS
+	// 3. Configuración de CORS para permitir acceso externo
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:4200"},
+		AllowOrigins:     []string{"*"}, // Permitir cualquier origen
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -49,18 +49,18 @@ func main() {
 	videoRouter := videoInfra.NewVideoRouter(router)
 	videoRouter.Run()
 
-	// 8. Iniciar el servidor
+	// 8. Iniciar el servidor en 0.0.0.0 para permitir acceso externo
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8000"
 	}
 
-	log.Printf("\n🚀 Servidor iniciado en http://localhost:%s", port)
+	log.Printf("\n🚀 Servidor iniciado en http://%s:%s", "44.210.114.208", port)
 	log.Println("📁 Rutas estáticas:")
 	log.Println("   - /uploads para videos subidos")
 	log.Println("   - /video_cache para videos cacheados")
 
-	if err := router.Run(":" + port); err != nil {
+	if err := router.Run("0.0.0.0:" + port); err != nil {
 		log.Fatal("Error al iniciar el servidor:", err)
 	}
 }
