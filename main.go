@@ -55,7 +55,7 @@ func main() {
 		port = "8000"
 	}
 
-	log.Printf("\n🚀 Servidor iniciado en http://%s:%s", "44.210.114.208", port)
+	log.Printf("\n🚀 Servidor iniciado en http://%s:%s", "44.217.6.231", port)
 	log.Println("📁 Rutas estáticas:")
 	log.Println("   - /uploads para videos subidos")
 	log.Println("   - /video_cache para videos cacheados")
